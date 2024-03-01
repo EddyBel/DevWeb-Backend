@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://eddybel.netlify.app"],
+    origin: ["https://eddybel.netlify.app", "http://localhost:5050"],
     methods: ["GET"],
   })
 );

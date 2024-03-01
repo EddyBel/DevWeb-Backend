@@ -1,6 +1,6 @@
 const API_GITHUB = "https://api.github.com/users/";
-const USER_NAME = env.VITE_GITHUB_USER_NAME || "eddybel";
-const TOKEN_GITHUB = "";
+const USER_NAME = process.env.GITHUB_USER;
+const TOKEN_GITHUB = process.env.GITHUB_TOKEN;
 
 const getUserRepositories = async () => {
   try {
