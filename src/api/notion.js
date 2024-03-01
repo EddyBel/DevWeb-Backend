@@ -3,7 +3,7 @@ const { Client } = require("@notionhq/client");
 
 // Crea una instancia del cliente con tu token de autenticación
 const notion = new Client({
-  auth: "secret_i6d7miH9igrqUR2Icsf90LPzLIU1hH58z0eN5qoSOA2",
+  auth: process.env.NOTION_KEY,
 });
 
 // Define una función que recibe el id de una página y retorna su contenido como json
