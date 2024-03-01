@@ -12,9 +12,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.APP_LOCATIONS?.split(",") ?? ["localhost:5050"],
+    origin: ["https://eddybel.netlify.app"],
     methods: ["GET"],
-    credentials: true,
   })
 );
 
