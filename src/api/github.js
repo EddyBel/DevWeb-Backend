@@ -4,12 +4,15 @@ const TOKEN_GITHUB = process.env.GITHUB_TOKEN;
 
 const getUserRepositories = async () => {
   try {
-    const response = await fetch(`${API_GITHUB}${USER_NAME}/repos`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${TOKEN_GITHUB}`,
-      },
-    });
+    const response = await fetch(
+      `${API_GITHUB}${USER_NAME}/repos?per_page=100`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${TOKEN_GITHUB}`,
+        },
+      }
+    );
     if (!response) throw new Error("Repos not found");
     return response.json();
   } catch (error) {
