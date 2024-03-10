@@ -1,5 +1,10 @@
 const { Router } = require("express");
 const { getNotionPage, getNotionDatabase } = require("../api/notion");
+const {
+  validateObjectsNotNull,
+  validateValues,
+  validateArrays,
+} = require("../utils/validations");
 const articles = Router();
 
 /** Esta ruta se encargfa de obtener las notas de snippets que busca de notion                                  */
@@ -169,6 +174,55 @@ articles.get("/posts/:id", async (req, res) => {
         type: block.type,
       };
     });
+    res.json({
+      message: "Success: Post found",
+      data: content,
+    });
+  } catch (error) {
+    res.json({
+      msg: "Error: Post not found",
+      error: error.message,
+      data: null,
+    });
+  }
+});
+
+async function getContentBlock(blocks) {
+  return await Promise.all(
+    blocks?.map(async (block) => {
+      const id = block.id;
+      const childBlocks = await getNotionPage(id);
+      const childBlocksData = childBlocks?.results;
+      const type = block.type;
+      const content = block[type];
+      const color = content?.color;
+      const languaje = content?.language;
+      let data = content?.rich_text ?? content?.external?.url;
+      let childsBlocks;
+
+      if (validateObjectsNotNull(childBlocks))
+        childsBlocks = await getContentBlock(childBlocksData);
+      if (!validateArrays(childsBlocks)) childsBlocks = null;
+      if (!validateArrays(data)) data = null;
+
+      return {
+        data,
+        color,
+        languaje,
+        type,
+        id,
+        childsBlocks,
+      };
+    })
+  );
+}
+
+articles.get("/post/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await getNotionPage(id);
+    const blocks = response.results;
+    const content = await getContentBlock(blocks);
     res.json({
       message: "Success: Post found",
       data: content,
